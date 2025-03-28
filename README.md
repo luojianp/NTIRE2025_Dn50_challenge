@@ -9,21 +9,16 @@
 
 Execute the script to test from [`run.sh`](./run.sh) 
 
-CUDA_VISIBLE_DEVICES=0 python3 test_NTIRE.py \
-    --data_dir test_imgs_dir \
-    --mode hybrid_test \
-    --model mambair \
-    --model_dir model_zoo/team02_Mambair_30.367.pth \
-    --tile 320 \
-    --tile_overlap 32 \
-    --out_dir Your_path 
+# Step 1: Execute mambair model inference, line 32 of the code: model_type = 'mambair', default: model_type = 'mambair'
+CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
+--data_dir ./NTIRE2025_Challenge/input \
+--model_id 2 \
+--save_dir ./NTIRE2025_Challenge/results
 
-CUDA_VISIBLE_DEVICES=0 python3 test_NTIRE.py \
-    --data_dir test_imgs_dir\
-    --mode hybrid_test \
-    --model promptir \
-    --model_dir model_zoo/team02_Promptir_Dn50.pth \
-    --tile 192 \
-    --tile_overlap 32 \
-    --out_dir Your_path
+# Step 2: Execute promptir model inference, line 32 of the code: model_type = 'promptir'
+CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
+--data_dir ./NTIRE2025_Challenge/input \
+--model_id 2 \
+--save_dir ./NTIRE2025_Challenge/results
 
+# Step 3: Take the results of the first and second steps 0.5 times each, and then add them together to get the final effect.
