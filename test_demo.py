@@ -11,25 +11,19 @@ from utils import utils_logger
 from utils import utils_image as util
 
 '''
+# Step 1: Execute inference of the mambair model. Line 54 of the code is: model_type = 'mambair'. The default is: model_type = 'mambair'
+CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
+--data_dir ./NTIRE2025_Challenge/input \
+--model_id 2 \
+--save_dir ./NTIRE2025_Challenge/results
 
-CUDA_VISIBLE_DEVICES=0 python3 test_NTIRE.py \
-    --data_dir test_imgs_dir \
-    --mode hybrid_test \
-    --model mambair \
-    --model_dir model_zoo/team02_Mambair_30.367.pth \
-    --tile 320 \
-    --tile_overlap 32 \
-    --out_dir Your_path 
+# Step 2: Execute inference of the promptir model. Line 54 of the code is: model_type = 'promptir'
+CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
+--data_dir ./NTIRE2025_Challenge/input \
+--model_id 2 \
+--save_dir ./NTIRE2025_Challenge/results
 
-CUDA_VISIBLE_DEVICES=0 python3 test_NTIRE.py \
-    --data_dir test_imgs_dir\
-    --mode hybrid_test \
-    --model promptir \
-    --model_dir model_zoo/team02_Promptir_Dn50.pth \
-    --tile 192 \
-    --tile_overlap 32 \
-    --out_dir Your_path
-
+# Step 3: Take the results of the first and second steps 0.5 times each, and then add them together to get the final effect.
 '''
 
 def select_model(args, device):
@@ -46,20 +40,20 @@ def select_model(args, device):
         tile = None
         
     elif model_id == 2:
-        """ 团队02模型加载 """
+        """ Model loading for team 02 """
         from models.team02_promptir_arch import PromptIR
         from models.team02_mambairv2_arch import MambaIRv2
         
-        # 配置参数
-        model_type = 'mambair'  # 第一次执行该值为：mambair，第二次执行该值为：promptir
+        # Configuration parameters
+        model_type = 'mambair' # The value for the first execution is: mambair, and the value for the second execution is: promptir
         name = f"{model_id:02}_{model_type}"
         data_range = 1.0
         model_path = os.path.join('model_zoo', 'team02_Mambair_30.367.pth')
         
-        # 初始化模型
+        # init model
         model = MambaIRv2() if model_type == 'mambair' else PromptIR()
         
-        # 加载权重
+        # load model file
         state_dict = torch.load(model_path, map_location=device)
         if 'params_ema' in state_dict:
             model.load_state_dict(state_dict['params_ema'])
@@ -68,7 +62,7 @@ def select_model(args, device):
         else:
             model.load_state_dict(state_dict)
         
-        # 分块参数配置
+        # the tile Parameters configure
         tile = [320, 192] if model_type == 'mambair' else [192]
         
     else:
@@ -99,10 +93,10 @@ def select_dataset(data_dir, mode):
     return path
 
 def forward(img_lq, model, args, tile=None, tile_overlap=32, scale=1, ):
-    """ 增强型前向传播 """
-    if args.model_id == 2:  # 团队02专属处理
+    """ Enhanced forward propagation """
+    if args.model_id == 2: # Exclusive processing for team 02
         def _transform(v, flag):
-            # 8种几何变换定义
+            # Definition of 8 geometric transformations
             transforms = [
                 lambda x: x,
                 lambda x: x.flip(-1),
@@ -119,7 +113,7 @@ def forward(img_lq, model, args, tile=None, tile_overlap=32, scale=1, ):
         for flag in range(8):
             trans_input = _transform(img_lq, flag)
             
-            # 多尺度分块融合
+            # Multi-scale block fusion
             if tile:
                 tile_outputs = []
                 for t in tile:
@@ -128,7 +122,7 @@ def forward(img_lq, model, args, tile=None, tile_overlap=32, scale=1, ):
             else:
                 trans_output = model(trans_input)
                 
-            # 逆变换
+            # Inverse transformation
             outputs.append(_transform(trans_output, flag))
             
         return torch.mean(torch.stack(outputs), dim=0)
