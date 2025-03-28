@@ -9,13 +9,13 @@
 
 Execute the script to test from [`run.sh`](./run.sh) 
 
-# Step 1: Execute mambair model inference, line 32 of the code: model_type = 'mambair', default: model_type = 'mambair'
+# Step 1: Execute inference of the mambair model. Line 48 of the code is: model_type = 'mambair'. The default is: model_type = 'mambair'
 CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
 --data_dir ./NTIRE2025_Challenge/input \
 --model_id 2 \
 --save_dir ./NTIRE2025_Challenge/results
 
-# Step 2: Execute promptir model inference, line 32 of the code: model_type = 'promptir'
+# Step 2: Execute inference of the promptir model. Line 48 of the code is: model_type = 'promptir'
 CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
 --data_dir ./NTIRE2025_Challenge/input \
 --model_id 2 \
