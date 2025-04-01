@@ -30,7 +30,7 @@ CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
 --save_dir ./NTIRE2025_Challenge/results2
 
 #######################################
-# Image Fusion Module
+# Phase 3: Image Fusion Module
 #######################################
 
 # Create output directory
