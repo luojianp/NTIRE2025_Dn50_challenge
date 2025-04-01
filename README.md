@@ -13,12 +13,13 @@ Execute the script to test from [`run.sh`](./run.sh)
   CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
   --data_dir ./NTIRE2025_Challenge/input \
   --model_id 2 \
-  --save_dir ./NTIRE2025_Challenge/results
+  --save_dir ./NTIRE2025_Challenge/results1
 
   ### Step 2: Execute inference of the promptir model. Line 48 of the code is: model_type = 'promptir'
   CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
   --data_dir ./NTIRE2025_Challenge/input \
   --model_id 2 \
-  --save_dir ./NTIRE2025_Challenge/results
+  --save_dir ./NTIRE2025_Challenge/results2
   
   ### Step 3: Take the results of the first and second steps 0.5 times each, and then add them together to get the final effect.
+  sh run.sh
