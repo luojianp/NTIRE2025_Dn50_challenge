@@ -7,8 +7,6 @@
 
 ## Test the model：
 
-Execute the script to test from [`run.sh`](./run.sh) 
-
   ### Step 1: Execute inference of the mambair model. Line 48 of the code is: model_type = 'mambair'. The default is: model_type = 'mambair'
   CUDA_VISIBLE_DEVICES=0 python3 test_demo.py \
   --data_dir ./NTIRE2025_Challenge/input \
